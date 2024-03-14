@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Temperatura</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f8f9fa;
+    }
+
+    .container {
+      margin-top: 50px;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+    }
+
+    .form-label {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="mb-4 text-center">Calculadora de Temperatura</h1>
+    <form id="temperaturaForm">
+      <div class="mb-3">
+        <label for="horaInput" class="form-label">Hora (en formato de 24 horas, por ejemplo, 10:30 para las 10:30AM):</label>
+        <input type="text" class="form-control" id="horaInput" pattern="(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]" placeholder="HH:MM" required>
+        <div class="invalid-feedback">Ingresa una hora válida en formato HH:MM (por ejemplo, 10:30).</div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Calcular Temperatura</button>
+    </form>
+    <div id="resultado" class="mt-4"></div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function calcularTemperatura(hora) {
+      const horaInicial = 9;
+      const temperaturaInicial = 23;
+      const horaFinal = 12;
+      const temperaturaFinal = 37;
+
+      const tiempo = hora.split(":");
+      const horas = parseInt(tiempo[0]);
+      const minutos = parseInt(tiempo[1]);
+
+      const fraccionHora = horas + minutos / 60;
+
+      const temperatura = temperaturaInicial + ((fraccionHora - horaInicial) / (horaFinal - horaInicial)) * (temperaturaFinal - temperaturaInicial);
+      return temperatura.toFixed(2); // Redondear la temperatura a dos decimales
+    }
+
+    document.getElementById("temperaturaForm").addEventListener("submit", function(event) {
+      event.preventDefault(); // Evitar que se envíe el formulario
+
+      const horaInput = document.getElementById("horaInput");
+      const hora = horaInput.value;
+
+      if (hora.match(/(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]/)) {
+        const temperaturaCalculada = calcularTemperatura(hora);
+        document.getElementById("resultado").innerHTML = `<p class="text-center">La temperatura a las ${hora} es aproximadamente ${temperaturaCalculada} grados.</p>`;
+      } else {
+        horaInput.classList.add("is-invalid");
+      }
+    });
+  </script>
+</body>
+</html>
